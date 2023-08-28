@@ -1,5 +1,5 @@
 import { HttpResponse } from "../protocols";
-import { User } from "../../database/prisma-client";
+import { User } from "@prisma/client";
 
 export interface IGetUserController {
     handle(): Promise<HttpResponse<User[]>>;
