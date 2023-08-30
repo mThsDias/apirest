@@ -1,4 +1,4 @@
-import HttpRequest, { HttpResponse } from "../protocols";
+import { HttpResponse, HttpRequest } from "../protocols";
 import { User } from "@prisma/client";
 import {
     CreateUserParams,

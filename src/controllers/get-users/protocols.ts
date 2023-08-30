@@ -6,5 +6,7 @@ export interface IGetUserController {
 }
 
 export interface IGetUserRepository {
-    getUsers(): Promise<User[]>;
+    getUsers(): Promise<UserWithoutId[]>;
 }
+
+export type UserWithoutId = Omit<User, "id" | "password">;

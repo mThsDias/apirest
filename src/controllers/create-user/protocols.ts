@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import HttpRequest, { HttpResponse } from "../protocols";
+import { HttpResponse, HttpRequest } from "../protocols";
 
 export interface ICreateUserController {
     handle(
