@@ -4,6 +4,7 @@ import { GetUsersController } from "../controllers/get-users/get-users";
 import { PrismaCreateUser } from "../repositories/create-user/prisma-create-user";
 import { CreateUserController } from "../controllers/create-user/create-user";
 import { PrismaUpdateUserRepository } from "../repositories/update-user/prisma-update-user";
+import { UpdateUserController } from "../controllers/update-user/update-user";
 
 const userRoutes = Router();
 
@@ -29,13 +30,14 @@ userRoutes.post("/create", async (request, response) => {
     response.status(statusCode).send(body);
 });
 
-userRoutes.put("/update", async (request, response) => {
+userRoutes.patch("/update/:id", async (request, response) => {
     const updateUserRepository = new PrismaUpdateUserRepository();
 
     const updateUserController = new UpdateUserController(updateUserRepository);
 
     const { body, statusCode } = await updateUserController.handle({
         body: request.body,
+        params: request.params,
     });
 
     response.status(statusCode).send(body);
