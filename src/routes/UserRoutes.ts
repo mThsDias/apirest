@@ -5,6 +5,8 @@ import { PrismaCreateUser } from "../repositories/create-user/prisma-create-user
 import { CreateUserController } from "../controllers/create-user/create-user";
 import { PrismaUpdateUserRepository } from "../repositories/update-user/prisma-update-user";
 import { UpdateUserController } from "../controllers/update-user/update-user";
+import { PrismaDeleteUserRepository } from "../repositories/delete-user/prisma-delete-user";
+import { DeleteUserController } from "../controllers/delete-user/delete-user";
 
 const userRoutes = Router();
 
@@ -37,6 +39,20 @@ userRoutes.patch("/update/:id", async (request, response) => {
 
     const { body, statusCode } = await updateUserController.handle({
         body: request.body,
+        params: request.params,
+    });
+
+    response.status(statusCode).send(body);
+});
+
+userRoutes.delete("/delete/:id", async (request, response) => {
+    const prismaDeleteUserRepository = new PrismaDeleteUserRepository();
+
+    const deleteUserController = new DeleteUserController(
+        prismaDeleteUserRepository
+    );
+
+    const { body, statusCode } = await deleteUserController.handle({
         params: request.params,
     });
 

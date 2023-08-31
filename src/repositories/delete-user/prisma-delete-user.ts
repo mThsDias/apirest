@@ -1,8 +1,8 @@
-import { IDeleteUserController } from "../../controllers/delete-user/protocols";
+import { IDeleteUserRepository } from "../../controllers/delete-user/protocols";
 import { User } from "@prisma/client";
 import { prismaClient } from "../../database/prisma-client";
 
-export class PrismaDeleteUserRepository implements IDeleteUserController {
+export class PrismaDeleteUserRepository implements IDeleteUserRepository {
     async deleteUser(id: string): Promise<User> {
         const user = await prismaClient.user.delete({
             where: { id },
