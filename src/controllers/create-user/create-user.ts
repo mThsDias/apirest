@@ -18,27 +18,31 @@ export class CreateUserController implements IController {
                     !HttpRequest?.body?.[field as keyof CreateUserParams]
                         ?.length
                 ) {
-                    return badRequest(`Field ${field} is required!`);
+                    return badRequest(
+                        `Field ${field} is required!`
+                    ) as HttpResponse<string>;
                 }
             }
 
             const emailIsValid = validator.isEmail(HttpRequest.body!.email);
 
             if (!emailIsValid) {
-                return badRequest("Invalid email!");
+                return badRequest("Invalid email!") as HttpResponse<string>;
             }
 
             if (!HttpRequest.body) {
-                return badRequest("Please specify a body!");
+                return badRequest(
+                    "Please specify a body!"
+                ) as HttpResponse<string>;
             }
 
             const user = await this.createUserRepository.createUser(
                 HttpRequest.body!
             );
 
-            return created(user);
+            return created(user) as HttpResponse<User>;
         } catch (error) {
-            return serverError();
+            return serverError() as HttpResponse<string>;
         }
     }
 }

@@ -13,7 +13,7 @@ export class UpdateUserController implements IController {
             const body = httpRequest?.body as UpdateUserParams;
 
             if (!id) {
-                return badRequest("Missing user id.");
+                return badRequest("Missing user id.") as HttpResponse<string>;
             }
 
             const allowedFields: (keyof UpdateUserParams)[] = [
@@ -25,14 +25,16 @@ export class UpdateUserController implements IController {
             );
 
             if (someFieldIsNotAllow) {
-                return badRequest("Some field is not allowed.");
+                return badRequest(
+                    "Some field is not allowed."
+                ) as HttpResponse<string>;
             }
 
             const user = await this.updateUserRepository.updateUser(id, body);
 
-            return ok(user);
+            return ok(user) as HttpResponse<User>;
         } catch (error) {
-            return serverError();
+            return serverError() as HttpResponse<string>;
         }
     }
 }

@@ -10,9 +10,9 @@ export class GetUsersController implements IController {
         try {
             const users = await this.getUsersRepository.getUsers();
 
-            return ok(users);
+            return ok(users) as HttpResponse<User[]>;
         } catch (error) {
-            return serverError();
+            return serverError() as HttpResponse<string>;
         }
     }
 }
