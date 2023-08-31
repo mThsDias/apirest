@@ -1,9 +1,8 @@
-import { IUpdateUserController } from "./protocols";
 import { User } from "@prisma/client";
-import { HttpRequest, HttpResponse } from "../protocols";
+import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { UpdateUserParams, IUpdateUserRepository } from "./protocols";
 
-export class UpdateUserController implements IUpdateUserController {
+export class UpdateUserController implements IController {
     constructor(private readonly updateUserRepository: IUpdateUserRepository) {}
     async handle(
         httpRequest: HttpRequest<UpdateUserParams>

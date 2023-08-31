@@ -1,13 +1,9 @@
-import { HttpResponse, HttpRequest } from "../protocols";
+import { HttpResponse, HttpRequest, IController } from "../protocols";
 import { User } from "@prisma/client";
-import {
-    CreateUserParams,
-    ICreateUserController,
-    ICreateUserRepository,
-} from "./protocols";
+import { CreateUserParams, ICreateUserRepository } from "./protocols";
 import validator from "validator";
 
-export class CreateUserController implements ICreateUserController {
+export class CreateUserController implements IController {
     constructor(private readonly createUserRepository: ICreateUserRepository) {}
 
     async handle(
