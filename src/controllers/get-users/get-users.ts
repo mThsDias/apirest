@@ -1,22 +1,18 @@
-import { IController } from "../protocols";
+import { HttpResponse, IController } from "../protocols";
+import { User } from "@prisma/client";
 import { IGetUserRepository } from "./protocols";
+import { ok, serverError } from "../helpers";
 
 export class GetUsersController implements IController {
     constructor(private readonly getUsersRepository: IGetUserRepository) {}
 
-    async handle() {
+    async handle(): Promise<HttpResponse<User[] | string>> {
         try {
             const users = await this.getUsersRepository.getUsers();
 
-            return {
-                statusCode: 200,
-                body: users,
-            };
+            return ok(users);
         } catch (error) {
-            return {
-                statusCode: 500,
-                body: "Something went wrong",
-            };
+            return serverError();
         }
     }
 }

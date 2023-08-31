@@ -2,13 +2,14 @@ import { HttpResponse, HttpRequest, IController } from "../protocols";
 import { User } from "@prisma/client";
 import { CreateUserParams, ICreateUserRepository } from "./protocols";
 import validator from "validator";
+import { badRequest, created, serverError } from "../helpers";
 
 export class CreateUserController implements IController {
     constructor(private readonly createUserRepository: ICreateUserRepository) {}
 
     async handle(
         HttpRequest: HttpRequest<CreateUserParams>
-    ): Promise<HttpResponse<User>> {
+    ): Promise<HttpResponse<User | string>> {
         try {
             const requiredFields = ["name", "email", "password"];
 
@@ -17,42 +18,27 @@ export class CreateUserController implements IController {
                     !HttpRequest?.body?.[field as keyof CreateUserParams]
                         ?.length
                 ) {
-                    return {
-                        statusCode: 400,
-                        body: `Field ${field} is required!`,
-                    };
+                    return badRequest(`Field ${field} is required!`);
                 }
             }
 
             const emailIsValid = validator.isEmail(HttpRequest.body!.email);
 
             if (!emailIsValid) {
-                return {
-                    statusCode: 400,
-                    body: "Invalid email!",
-                };
+                return badRequest("Invalid email!");
             }
 
             if (!HttpRequest.body) {
-                return {
-                    statusCode: 400,
-                    body: "Please specify a body!",
-                };
+                return badRequest("Please specify a body!");
             }
 
             const user = await this.createUserRepository.createUser(
                 HttpRequest.body!
             );
 
-            return {
-                statusCode: 201,
-                body: user,
-            };
+            return created(user);
         } catch (error) {
-            return {
-                statusCode: 500,
-                body: "Something went wrong",
-            };
+            return serverError();
         }
     }
 }

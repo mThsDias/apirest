@@ -1,21 +1,19 @@
 import { User } from "@prisma/client";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { UpdateUserParams, IUpdateUserRepository } from "./protocols";
+import { badRequest, ok, serverError } from "../helpers";
 
 export class UpdateUserController implements IController {
     constructor(private readonly updateUserRepository: IUpdateUserRepository) {}
     async handle(
         httpRequest: HttpRequest<UpdateUserParams>
-    ): Promise<HttpResponse<User>> {
+    ): Promise<HttpResponse<User | string>> {
         try {
             const { id } = httpRequest?.params as { id: string };
             const body = httpRequest?.body as UpdateUserParams;
 
             if (!id) {
-                return {
-                    statusCode: 400,
-                    body: "Missing param id",
-                };
+                return badRequest("Missing user id.");
             }
 
             const allowedFields: (keyof UpdateUserParams)[] = [
@@ -27,23 +25,14 @@ export class UpdateUserController implements IController {
             );
 
             if (someFieldIsNotAllow) {
-                return {
-                    statusCode: 400,
-                    body: "Some field is not allowed",
-                };
+                return badRequest("Some field is not allowed.");
             }
 
             const user = await this.updateUserRepository.updateUser(id, body);
 
-            return {
-                statusCode: 200,
-                body: user,
-            };
+            return ok(user);
         } catch (error) {
-            return {
-                statusCode: 500,
-                body: "Internal server error",
-            };
+            return serverError();
         }
     }
 }
